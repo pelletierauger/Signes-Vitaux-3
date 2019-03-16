@@ -145,16 +145,35 @@ SynthDef("Moog",{
 )
 LFSaw
 Saw
+
+x = Synth.new("Moog", [\attackf, 0.5, \sus, 2, \rel, 2, \rel2, f, \out, 0, \oscType, 2, \oscType2, 0, \cutoff, 1000]);
+x.set(\gate, 0);
 (
+
+var sc1 = Scale.major.degrees.midiratio * ~toFreq.("G#3");
+var sc2 = Scale.minor.degrees.midiratio * ~toFreq.("D#3");
 ~moogy.stop;
 ~moogy = Pbind(
     \instrument, "Moog",
-    \freq, Pseq([440, 440 * 5.midiratio, 440 * 7.midiratio], inf) * Pseq([0.5, 1].stutter(8), inf) * -3.midiratio,
-    \dur, 0.125,
+//     \freq, Pseq([440, 440 * 5.midiratio, 440 * 7.midiratio], inf) * Pseq([0.5, 1].stutter(8), inf) * -3.midiratio,
+//     \freq, ~toFreq.("G#4") * Pseq([0, -5].stutter(32).midiratio, inf) * Pseq([0, 4, 0, 5].stutter(2).midiratio, inf),
+    
+    \freq, Pseq([[sc1[0], sc1[2], sc1[3]].stutter(4), 
+    [sc2[0], sc2[2], sc2[3]].stutter(4)], inf),
+    
+    
+//         \freq, Pseq([[sc1[0], sc1[3], sc1[5]].stutter(4), 
+//     [sc2[0], sc2[3], sc2[5]].stutter(4)], inf),
+    
+            \freq, Pseq([sc1[0], sc1[3], sc1[5], sc1[3], 
+    sc2[0], sc2[3], sc2[5], sc2[4]].stutter(4), inf) * Pseq([0.5, 1], inf),
+    
+    
+    \dur, 0.125 * 2,
 //     \dur, Prand([Pn(0.125, 8), Rest(0.125)], inf),
-    \sust, 5,
-    \sustf, 0.2,
-    \relf, 0.5,
+    \sust, 3,
+    \sustf, 0.4,
+    \relf, 2.0,
     \oscType, Pseq([0,0,0,0,0], inf),
     // \oscType, 2,
     \oscType2, Pseq([0,0,2,2,1], inf),
