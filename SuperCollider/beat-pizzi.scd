@@ -34,14 +34,19 @@ a = [
     {|a = 1| Synth.new(\printemps, [\spos, 0.84, \rel, 0.25, \rate, 0.5, \amp, 1 * a])},
     {|a = 1| Synth.new(\printemps, [\spos, 0.88, \rel, 0.6, \rate, 0.5, \amp, 1 * a])},
     {|a = 1| Synth.new(\printemps, [\spos, 0.96, \rel, 0.45, \rate, 0.5, \amp, 1 * a])},
-    {|a = 1| Synth.new(\printemps, [\spos, 0.96, \rel, 0.5, \rate, 1, \amp, 1 * a])},
-    {|a = 1| Synth.new(\printemps, [\spos, 0.961, \rel, 0.5, \rate, 1, \amp, 1 * a])},
+    {|a = 1| Synth.new(\printemps, [\spos, 0.96, \rel, 0.18, \rate, 1, \amp, 1 * a])},
+    {|a = 1| Synth.new(\printemps, [\spos, 0.961, \rel, 0.18, \rate, 1, \amp, 1 * a])},
     {|a = 1| Synth.new(\printemps, [\spos, 0.961, \rel, 0.9, \rate, 0.5, \amp, 1 * a])},
     {|a = 1| Synth.new(\printemps, [\spos, 0.835, \rel, 0.8, \rate, 0.25, \amp, 1 * a])}
 ];
 )
 
-a[11].();
+a[5].();
+
+
+{|a = 1| Synth.new(\printemps, [\spos, 0.96, \rel, 0.18, \rate, 1, \amp, 1 * a])}.();
+{|a = 1| Synth.new(\printemps, [\spos, 0.961, \rel, 0.18, \rate, 1, \amp, 1 * a])}.();
+{|a = 1| Synth.new(\printemps, [\spos, 0.835, \rel, 0.175, \rate, 1, \amp, 1 * a])}.();
 
 
 a.size;
@@ -53,8 +58,9 @@ Synth.new(\printemps, [\spos, 0.6, \rel, 0.31, \rate, 1, \amp, 1]);
 Synth.new(\printemps, [\spos, 0.96, \rel, 1.05, \rate, 0.25, \amp, 1]);
 Synth.new(\printemps, [\spos, 0.835, \rel, 0.8, \rate, 0.25, \amp, 1]);
 
-
-
+t.tempo * 60;
+t.tempo_(54/60);
+t.tempo_(45/60);
 (
 Event.addEventType(\beatPrintanier, {
     if (~amp.isFunction, {~amp = 1});
@@ -66,8 +72,8 @@ Event.addEventType(\beatPrintanier, {
 ~p1 = Pbind(
     \type, \beatPrintanier,
     \dur, Pseq([0.125], inf),
-    \num, Pseq([10, 11, 6, 11], inf),
-    \amp, Pseq([2.25, 1.25, 1.5, 1.25], inf) * Pseq([Pgeom(0.45, 0.9, 8)], inf)
+    \num, Pseq([10, 11, 5, 11], inf),
+    \amp, Pseq([2.25, 1.125, 1.5, 1.125], inf) * Pseq([Pgeom(0.45, 0.9, 8)], inf)
 ).play(t, quant: 1);
 )
 
@@ -77,7 +83,7 @@ Event.addEventType(\beatPrintanier, {
     \type, \beatPrintanier,
     \dur, Pseq([0.125, 0.125, 0.25], inf),
     \num, Pseq([9, 10, 12, 11], inf),
-    \amp, Pseq([2.25, 1.5, 1.5, 1.25], inf) * Pseq([Pgeom(1.5, 0.9, 8)], inf)
+    \amp, Pseq([1.25, 1.5, 1.5, 1.25], inf) * Pseq([Pgeom(1.5, 0.9, 8)], inf)
 ).play(t, quant: 1);
 )
 
