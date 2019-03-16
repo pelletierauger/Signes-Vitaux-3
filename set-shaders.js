@@ -40,8 +40,8 @@ float plot(vec2 s, float p) {
 float circ(float speed, float size, float vx, float vy, float dist) {
   // float x = cos(time * speed) * dist * 0.012 - 0.425;
   // float y = sin(time * speed) * dist * 0.012 - 0.25;
-  float x = cos(time * speed) * dist * (sin(time * 0.01)) * 0.12 - 0.425;
-  float y = sin(time * speed) * dist * (sin(time * 0.01)) * 0.12 - 0.25;
+  float x = cos(time * speed * 100.0) * dist * (sin(time)) * 0.12 - 0.425;
+  float y = sin(time * speed * 100.0) * dist * (sin(time)) * 0.12 - 0.25;
   // float x = cos(time * speed) * dist * abs(sin(time * 0.01) * 1.0) - 0.425;
   // float y = sin(time * speed) * dist * abs(sin(time * 0.01) * 1.0) - 0.25;
   vec2 v = vec2(vx + x, vy + y);

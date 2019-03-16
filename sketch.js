@@ -5,6 +5,10 @@ let fileName = "./frames/sketch";
 let maxFrames = 20;
 let gl, shaderProgram;
 let time;
+let positive = true;
+let intensity;
+let drawCount = 0;
+let drawIncrement = 0.01;
 
 // a shader variable
 let texcoordShader;
@@ -68,7 +72,8 @@ function draw() {
         setShaders();
     }
     // gl.uniform1fv(time, frameCount);
-    gl.uniform1f(time, frameCount);
+    sendSuperCollider();
+    gl.uniform1f(time, drawCount);
     // shader() sets the active shader with our shader
     // shader(texcoordShader);
     // shaderProgram.setUniform('time', frameCount);
@@ -98,7 +103,7 @@ function draw() {
 
 
     gl.drawArrays(gl.TRIANGLES, 0, numItems);
-
+    drawCount += drawIncrement;
 }
 
 // function windowResized() {

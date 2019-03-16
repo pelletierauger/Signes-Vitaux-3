@@ -165,8 +165,8 @@ n.next;
     // \rate, 1,
     \amp, Pseq([Pgeom(7, 0.9, 4)], inf),
     \pan, Pwhite(-0.5, 0.5, inf),
-    \out, ~reverbBus
-).play(t, quant: 1);
+    \out, 0
+).play(quant: 1);
 )
 
 (
@@ -190,8 +190,29 @@ n.next;
     \rate, [0.5, 1],
     \amp, 15,
     \pan, Pwhite(-1, 1, inf),
-    \out, ~reverbBus
-).play(t, quant: 1);
+    \out, 0
+).play(quant: 1);
+)
+
+
+(
+// Low shimmer, tapis chatoyant
+~shimmerD.stop;
+~shimmerD = Pbind(
+    \instrument, \guitare,
+    \dur, 1,
+    \spos, 0.56,
+    \spos, Pseq([0.56, 0.535].stutter(1), inf),
+    \spos, Pseq([0.58].stutter(1), inf), //ii Chord
+     \spos, Pseq([0.585].stutter(1), inf), //ii Chord très doux
+     \spos, Pseq([0.795 - 0.015, 0.585 - 0.008].stutter(4), inf), //ii Chord
+    \rel, 4 * Pseq([Pgeom(0.5, 1.01, 4)], inf),
+    \atk, 0.25,
+    \rate, -3.midiratio,
+    \amp, Pseq([Pgeom(0.5, 1.065, 4)], inf) * 7,
+    \pan, Pwhite(-0.5, 0.5, inf),
+    \out, 0
+).play(quant: 1);
 )
 
 
