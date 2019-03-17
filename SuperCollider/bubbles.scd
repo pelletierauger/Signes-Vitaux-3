@@ -162,16 +162,17 @@ SynthDef.new(\newChirps, {
     var sig, sig2, env, osc, osc2, loopEnv, loopEnv2, loopEnv3, linPass;
     osc = LFTri.ar(freqOsc, mul: 0.5, add:0.5);
     osc2 = LFTri.ar(1, pi, mul: 0.5, add:0.5);
-    loopEnv = EnvGen.kr(Env.circle([1, 0, 0], [0.01, 0.01, 0.00001]));
-    loopEnv2 = EnvGen.kr(Env.circle([1, 1.1, 1], [0.01, 0.1, 0.1 * freqOsc]));
-    loopEnv3 = EnvGen.kr(Env.circle([1, 0, 0], [0.01, 0.01, 0.001]));
+    loopEnv = EnvGen.kr(Env.circle([1, 0, 0], [0.01, 0.01, 0.01]));
+    loopEnv2 = EnvGen.kr(Env.circle([1, 1.1, 1], [0.01, 0.1, 0.001 * freqOsc]));
+    loopEnv3 = EnvGen.kr(Env.circle([1, 0, 0], [0.01, 0.01, 0.05]));
     env = EnvGen.kr(Env.new([0.00001, 1, 0.00001], [atk, rel], curve: 'exp'), doneAction: 2);
     sig = SinOsc.ar([freq, freq + 0.1]) * 0.1;
     sig = sig + (LFTri.ar([freq + 0.1, freq + 0.2] * 1, pi) * 0.02);
     sig = sig * env * amp;
     sig = (sig * loopEnv3) * (1 + LFSaw.ar([freq + 1, freq + 1.1] * 2.001, mul: loopEnv) * (1 + WhiteNoise.ar(mul: loopEnv * 0.4)));
-    sig = sig * LFSaw.ar([freq + 0.1, freq + 0.2] * 2.001);
-    linPass = XLine.kr(500, 6000, atk + rel * 0.5);
+    sig = sig * LFSaw.ar([freq + 0.1, freq + 0.2] * 1.001);
+    linPass = XLine.kr(500, 9000, atk + rel * 0.25);
+//         linPass = XLine.kr(5000, 500, atk + rel * 0.25);
     sig = LPF.ar(sig, linPass) * 4;
     sig = Balance2.ar(sig[0], sig[1], pan, 1);
     Out.ar(out, sig);
@@ -179,7 +180,8 @@ SynthDef.new(\newChirps, {
 )
 
 (
-var modif = -4.midiratio * 0.midiratio;
+~noisyPestilence = {
+var modif = -4.midiratio * [-12, 0, 12].choose.midiratio;
 var baseOsc = rrand(1, 480);
 var minOsc = baseOsc - 0.05 / 12;
 var maxOsc = baseOsc + 0.05 / 12;
@@ -195,4 +197,9 @@ Synth.new(\newChirps, [\freq, key * 11.midiratio, \amp, 1, \out, 0, \rel, 20, \p
 Synth.new(\newChirps, [\freq, key * 14.midiratio, \amp, 1, \out, 0, \rel, 20, \pan, rrand(-0.5, 0.5), \freqOsc, rrand(minOsc, maxOsc)]);
 baseOsc.postln;
     }).play;
+    [6, 8, 10].choose;
+};
 )
+
+TempoClock.default.sched(0.1, {~noisyPestilence.()});
+TempoClock.default.clear;
