@@ -141,12 +141,13 @@ p = Pbind(
 ).play(t, quant: 1);
 )
 
-
+~key;
 rrand(1.0, 20);
 
 (
 // Clean
 ~f = {
+if (~dur.asStream.next > 0.005, {
     var key = ~key;
     var modif = 1.midiratio * 0.midiratio;
     var note1 = ~toFreq.(key) * [0, 12].midiratio.choose * modif;
@@ -170,11 +171,17 @@ rrand(1.0, 20);
         delay.wait;
         play({ PMOsc.ar([note5, note5+1], note3 * mu, Line.ar(0,max,8), 0, XLine.ar(0.1,0.0001, 8, 1, 0, 2)) });
     }).play;
+    });
     4;
 };
 )
 
+~dur.next;
 ~f.();
+
+~test = Pkey(~dur).asStream.next.postln;
+~test.next.postln;
+~test = ~dur.asStream.next.postln;
 
 TempoClock.default.sched(0.1, {~f.()});
 TempoClock.default.clear;
