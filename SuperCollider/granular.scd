@@ -43,7 +43,8 @@ SynthDef(\guitare, {
     \harmonious,
     {
         arg msg, time, addr, port;
-            "wazzup".postln;
+            "receiving har".postln;
+            msg[1].postln;
         ~har.source = Pn(msg[1], inf);
     },
     '/har'
@@ -64,17 +65,17 @@ SynthDef(\guitare, {
 (
 ~keyListen.free;
 ~keyListen = OSCdef.new(
-    \harmonious,
+    \keylistener,
     {
         arg msg, time, addr, port;
-        msg[1].postln;
+//         msg[1].postln;
         ~key = msg[1];
     },
     '/key'
 );
 )
 
-
+~key;
 ~har.asStream.next;
 ~shimPos.asStream.next;
 ~shimPos.source = Pn(~har - ~loc, inf);
@@ -107,7 +108,7 @@ SynthDef(\guitare, {
     // Dmaj7, A, Dmaj7, Cm
     // IV, I, IV, iii
     \spos, Pseq([0.237, 0.2545, 0.237, 0.252].stutter(4 * 16), inf) + Pwhite(0.001, 0.002, inf),
-    \spos, ~shimPos + Pwhite(-0.0001, 0.0001, inf),
+    \spos, ~har - ~loc + Pwhite(-0.0001, 0.0001, inf),
 //     \rel, 1 / 128 * Pseq([Pgeom(0.5, 1.1, 4 * 16)], inf),
     \rel, 0.1,
     \atk, 0.5,
