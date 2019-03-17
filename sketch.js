@@ -8,7 +8,7 @@ let time;
 let positive = true;
 let intensity;
 let drawCount = 0;
-let drawIncrement = 0.01;
+let drawIncrement = 0.00125;
 
 // a shader variable
 let texcoordShader;

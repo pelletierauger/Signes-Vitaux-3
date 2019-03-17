@@ -1,48 +1,32 @@
 s.boot;
 s.quit;
 
-~b1 = Buffer.read(s, "/Users/guillaumepelletier/Desktop/Dropbox/Création musicale/Projets Ableton Live/Avec Caroline Project/Samples/Recorded/0002 7-Audio.aif");
-
 (
-SynthDef(\bpfbuff, {
-    arg buf = ~b1, rate = 1, spos = 0, pan = 1, amp = 1;
+t = TempoClock.new;
+t.tempo_(50/60);
+~guitare = Buffer.read(s, "/Users/guillaumepelletier/Desktop/Dropbox/Art/p5/Signes-Vitaux-3/SuperCollider/0001\ 7-Audio.aif");
+SynthDef(\guitare, {
+    arg buf = ~guitare, rate = 1, spos = 0, pan = 1, amp = 1, rel = 2, atk = 0.1, out = 0;
     var sig, env, lfo;
-    env = EnvGen.kr(Env.new([0, 1, 0.5, 0], [0.1, 0.15, 0.75]), doneAction: 2);
-    sig = PlayBuf.ar(2, buf, rate * BufRateScale.ir(buf), startPos: spos);
+    env = EnvGen.kr(Env.new([0, 1, 0], [atk, rel]), doneAction: 2);
+    sig = PlayBuf.ar(2, ~guitare, rate * BufRateScale.ir(buf), startPos: spos * 7144448);
     sig = sig * env;
+    sig = sig * amp;
     sig = Balance2.ar(sig[0], sig[1], pan, 1);
-    Out.ar(0, sig);
+    Out.ar(out, sig);
 }).add;
 )
 
-~speed = 0.005;
-~speed = 0.015;
-~key = 0;
-~speed = {0.015};
 (
 ~dur = PatternProxy(Pn(0.25, inf));
-~har = PatternProxy(Pn(0, inf));
-~loc = PatternProxy(Pn(400000, inf));
-~loc = PatternProxy(Pn(300000, inf));
-)
-(
-p.stop;
-a = 400000;
-p = Pbind(
-    \instrument, \bpfbuff,
-    \dur, Pseq([~dur], inf),
-    \spos, Pwhite(1047552 - 850000 + ~loc, 1047552 - 840000 + ~loc, inf).round,
-    \rate, Pseq([1 * ~har.midiratio, 1 * 5.midiratio, 1 * -7.midiratio], inf),
-    \pan, Pwhite(-1, 1, inf)
-).play;
+~har = PatternProxy(Pn(0.257, inf));
+~loc = PatternProxy(Pn(0, inf));
+~shimPos = PatternProxy(Pn(~har - ~loc, inf));
+~key = "Db1";
 )
 
-~dur.source = Pn(0.005, inf);
-~har.source = Pn(0, inf);
-~har.source = Pn(-2, inf);
-
 (
-// ~intenseListen.free;
+~intenseListen.free;
 ~intenseListen = OSCdef.new(
     \intense,
     {
@@ -59,8 +43,7 @@ p = Pbind(
     \harmonious,
     {
         arg msg, time, addr, port;
-//         msg.postln;
-//         msg[2].postln;
+            "wazzup".postln;
         ~har.source = Pn(msg[1], inf);
     },
     '/har'
@@ -73,10 +56,7 @@ p = Pbind(
     \locacious,
     {
         arg msg, time, addr, port;
-//         msg[1].postln;
-//         msg[1].postln;
         ~loc.source = Pn(msg[1], inf);
-//         msg[1].postln;
     },
     '/loc'
 );
@@ -87,22 +67,20 @@ p = Pbind(
     \harmonious,
     {
         arg msg, time, addr, port;
-//         msg.postln;
         msg[1].postln;
         ~key = msg[1];
-//         ~har.source = Pn(msg[1], inf);
     },
     '/key'
 );
 )
 
 
-
-
-
+~har.asStream.next;
+~shimPos.asStream.next;
 ~shimPos.source = Pn(~har - ~loc, inf);
 
 ~shimPos = PatternProxy(Pn(0.237, inf));
+
 // Doux shimmer majeur
 ~shimPos.source = Pn(0.257, inf);
 ~shimPos.source = Pn(0.257 - 0.004, inf);
@@ -145,7 +123,7 @@ p = Pbind(
 rrand(1.0, 20);
 
 (
-// Clean
+// Clear synth
 ~f = {
 if (~dur.asStream.next > 0.005, {
     var key = ~key;

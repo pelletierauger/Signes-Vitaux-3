@@ -7,6 +7,7 @@ sendSuperCollider = function() {
             console.log("Changed!");
             let har = (positive) ? 0.257 : 0.584;
             let key = (positive) ? "Db1" : "D#1";
+            console.log("har" + har +  ", key : " + key);
 //             socket.emit('supercollider', {
 //                 name: "/har",
 //                 value: har
@@ -53,5 +54,5 @@ sendSuperCollider = function() {
     }
 }
 
-drawIncrement = 0.00125;
+// drawIncrement = 0.00125;
 // log("ms");
