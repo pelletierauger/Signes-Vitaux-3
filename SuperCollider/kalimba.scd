@@ -188,7 +188,60 @@ arr.do({
 cutoff = cutoff + 500;
 amplitude = max(0, amplitude - 0.39);
 });
+)
 
+
+(
+~moogArp = {
+if (~dur.asStream.next > 0.01, {
+    var delay = 0;
+    var degrees = Array.fill(3, {[1, 1, 1, 2].choose}) ++ [1, 1];
+    var modif = -4.midiratio;
+    var key = ~toFreq.(~key) * modif * 2;
+    var notes = key * [0, 4, 7, 11, 14].midiratio;
+    var arr = (notes * degrees).scramble;
+    var cutoff = 500;
+    var amplitude = 6;
+    var steps = Array.fill(5, {[0.125, 0.25].choose});
+    var melody = Pbind(
+        \instrument, \mymoog,
+        \dur, Pseq(steps, 20),
+        \freq, Pseq(arr, inf),
+        \cutoff, Pseries(500, 100, inf),
+        \atk, 0.15, 
+        \atkf, 0.1, 
+        \rel, 0.75 * \dur, 
+        \relf, 1,
+        \sustime, 0.125, \sustimef, 0.125,
+        \amp, Pseries(6, -0.06, inf),
+        \pan, Pwhite(-0.5, 0.5, inf)
+    ).play();
+});
+floor(rrand(10.0, 20.0));
+};
+)
+
+~moogArp.();
+
+
+TempoClock.default.sched(0, {~moogArp.()});
+TempoClock.default.clear;
+
+
+~dur.asStream.next;
+(
+if (~dur.asStream.next > 0.01, {
+"We’re doing this thing!".postln;
+}, {
+"We’re not!".postln;
+});
+)
+
+(
+var a, b;
+a = Pseq([1, 2, 3], 2);    // repeat twice
+b = a.asStream;
+7.do({ b.next.postln; });
 )
 
 (
