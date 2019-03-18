@@ -126,8 +126,6 @@ Synth(\filtSaw, [
 // {[1,2,3,4,6,8,12,16].wchoose([7,6,5,4,3,3,1].normalizeSum)};
 )
 
-
-
 (
 SynthDef("Moog",{
     arg oscType =0, oscType2 = 1, pan = 0, level = 0.5, cutoff = 500, gain = 3.3, attack = 0.1, decay = 0.1, sust = 0.7, rel = 0.2, attackf = 0.1, decayf = 0.1, sustf = 0.9, relf = 0.2, gate = 1, freq =440, out = 0;
@@ -143,13 +141,57 @@ SynthDef("Moog",{
     Out.ar(out, filter);
 }).store;
 )
-LFSaw
-Saw
-
 x = Synth.new("Moog", [\attackf, 0.5, \sus, 2, \rel, 2, \rel2, f, \out, 0, \oscType, 2, \oscType2, 0, \cutoff, 1000]);
 x.set(\gate, 0);
 (
+SynthDef.new(\mymoog, {
+    arg pan = 0, amp = 0.1, cutoff = 500, gain = 3.3, atk = 0.1, dec = 0.1, sus = 0.7, sustime = 1, rel = 0.2, atkf = 0.1, decf = 0.1, susf = 0.9, sustimef = 0.9, relf = 0.2, freq = 440, out = 0;
+    var ampEnv = EnvGen.ar(Env.new([0.0, 1.0, sus, sus, 0.00001], [atk, dec, sustime, rel], [\linear, \linear, \linear, \exponential]), doneAction: 2);
+    var filterEnv = EnvGen.ar(Env.new([0.0, 1.0, susf, susf, 0.00001], [atkf, decf, sustimef, relf], [\linear, \linear, \linear, \exponential]));
+    var sig = LFTri.ar([freq, freq + 1]);
+    var lfo = SinOsc.kr(2, mul: 0.5);
+    sig = sig * LFTri.ar([freq + 2, freq + 1] * 1) * lfo;
+    sig = MoogFF.ar(sig, cutoff * filterEnv, gain) * amp * ampEnv;
+    sig = Balance2.ar(sig[0], sig[1], pan, 1);
+    Out.ar(out, sig);
+}).add;
+)
+x = Synth.new(\mymoog, [\rel, 2, \relf, 2, \cutoff, 1000, \sustime, 1, \sustimef, 1, \amp, 2, \freq, 220]);
+x.set(\gate, 0);
 
+(
+var delay = 0;
+var degrees = Array.fill(3, {[1, 1, 1, 2].choose}) ++ [1, 1];
+var modif = -4.midiratio;
+var arr = ~toFreq.(~key) * modif * 2 * [0, 4, 7, 11, 14].midiratio;
+var cutoff = 500;
+var amplitude = 6;
+var steps = Array.fill(5, {[0.125, 0.25].choose});
+arr = arr * degrees;
+arr = arr.scramble;
+20.do({
+arr.do({
+  arg item, i;
+  var schedule;
+  schedule = {
+    arg cutOffMod = 1, amplitudeMod = 1, dur = 1;
+    t.sched(delay, {
+      var synth = Synth.new(\mymoog, [\atk, 0.15, \atkf, 0.1, \rel, 0.75 * dur, \relf, 1, \cutoff, cutOffMod, \sustime, 0.125, \sustimef, 0.125, \amp, amplitudeMod, \freq, item]);
+      amplitudeMod.postln;
+      nil;
+    });
+  };
+  x = schedule.value(cutoff, amplitude, steps[i]);
+  x.value;        
+  delay = delay + steps[i];
+});
+cutoff = cutoff + 500;
+amplitude = max(0, amplitude - 0.39);
+});
+
+)
+
+(
 var sc1 = Scale.major.degrees.midiratio * ~toFreq.("G#3");
 var sc2 = Scale.minor.degrees.midiratio * ~toFreq.("D#3");
 ~moogy.stop;
