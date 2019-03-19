@@ -1,3 +1,6 @@
+s.record;
+s.stopRecording;
+
 (
 ~sourceGroup = Group.new;
 ~fxGroup = Group.after(~sourceGroup);
@@ -18,6 +21,7 @@ SynthDef.new(\reverb, {
     delaytime: [0.25, 0.26],
     decaytime: 20,
     mul: 1, add: 0);
+    del = LPF.ar(del, 600);
 	sig = sig + (del * 0.125);
     Out.ar(0, sig);
 }).add;
@@ -27,9 +31,6 @@ SynthDef.new(\reverb, {
 ~reverbSynth.free;
 ~reverbSynth = Synth.new(\reverb, [\in, ~reverbBus, \out, 0], ~fxGroup);
 )
-
-
-
 
 (
 SynthDef.new(\slideSynthDef, {
