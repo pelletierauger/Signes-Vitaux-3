@@ -3,6 +3,7 @@
 ~fxGroup = Group.after(~sourceGroup);
 ~volumeBus = Bus.audio(s, 2);
 ~reverbBus = Bus.audio(s, 2);
+~slideBus = Bus.audio(s, 2);
 ~passesBus = Bus.audio(s, 2);
 ~highPassBus = Bus.audio(s, 2);
 )
@@ -26,6 +27,41 @@ SynthDef.new(\reverb, {
 ~reverbSynth.free;
 ~reverbSynth = Synth.new(\reverb, [\in, ~reverbBus, \out, 0], ~fxGroup);
 )
+
+
+
+
+(
+SynthDef.new(\slideSynthDef, {
+    arg in, out = 0;
+    var sig, del;
+    sig = In.ar(in, 2);
+//     sig = HPF.ar(sig, 2000);
+//     sig = Compander.ar(sig, sig,
+//         thresh: 0.9,
+//         slopeBelow: 0.1,
+//         slopeAbove: 1,
+//         clampTime:  0.01,
+//         relaxTime:  0.01
+//     ) * 0.1;
+    del = CombC.ar(in: sig,
+    maxdelaytime: 0.1,
+    delaytime: [0.1, 0.09],
+    decaytime: 30,
+    mul: 1, add: 0);
+    sig = sig + (del * 0.25);
+    sig = sig * SinOsc.ar(3, mul: 0.5, add:0.5);
+    sig = sig + LPF.ar(GVerb.ar(sig, 99, 10), 1500);
+    Out.ar(0, sig);
+}).add;
+)
+
+(
+~slideSynth.free;
+~slideSynth = Synth.new(\slideSynthDef, [\in, ~slideBus, \out, 0], ~fxGroup);
+)
+
+
 
 (
 SynthDef.new(\passes, {
