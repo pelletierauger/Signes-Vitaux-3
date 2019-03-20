@@ -66,7 +66,7 @@ steps.sum * 10;
 };
 )
 
-
+~chirpCreak.();
 TempoClock.default.sched(0, {~chirpCreak.()});
 TempoClock.default.clear;
 
@@ -116,4 +116,43 @@ baseOsc.postln;
 )
 
 TempoClock.default.sched(0.1, {~noisyPestilence.()});
+TempoClock.default.clear;
+
+
+
+(
+SynthDef.new(\basschirp, {
+    arg out, freq = 220, lon = 3, amp = 1, pan = 0, atk = 2, rel = 2, freqOsc = 6, triMod = 0.5, dec = 0.2;
+    var sig, sig2, env, osc, osc2, loopEnv, loopEnv2, linPass;
+    osc = LFTri.ar(freqOsc, mul: 0.5, add:0.5);
+    osc2 = LFTri.ar(1, pi, mul: 0.5, add:0.5);
+    loopEnv = EnvGen.kr(Env.circle([0, 1, 0], [0.01, dec, 0.1 * freqOsc]));
+    loopEnv2 = EnvGen.kr(Env.circle([1, 1.1, 1], [0.01, dec, 0.1 * freqOsc]));
+    env = EnvGen.kr(Env.new([0.00001, 1, 0.00001], [atk, rel], curve: 'exp'), doneAction: 2);
+    sig = SinOsc.ar([freq, freq + 0.1]) * 0.1;
+    sig = sig + (LFTri.ar([freq + 0.1, freq + 0.2] * 1, pi) * 0.02);
+    sig = sig * env * amp;
+    sig = (sig * loopEnv) * (1 + LFTri.ar([freq + 1, freq + 1.1] * 1.001 * triMod, mul: loopEnv * 1) * (1 + WhiteNoise.ar(mul: loopEnv * 0.1)));
+//     sig = sig * LFSaw.ar([freq + 0.1, freq + 0.2] * 2.001);
+    linPass = XLine.kr(200, 6000, atk + rel * 0.5);
+    sig = LPF.ar(sig, linPass) * 4;
+    sig = Balance2.ar(sig[0], sig[1], pan, 1);
+    Out.ar(out, sig);
+}).add;
+)
+
+~f.();
+
+(
+~bassCluster = {
+Synth.new(\basschirp, [\freq, ~toFreq.(~key) * 2 * [1, 13].choose.midiratio, \amp, 1, \out, 0, \rel, 20, \pan, rrand(-0.85, 0.5), \freqOsc, rrand(0.1, 0.5), \triMod, 0.5, \dec, rrand(0.2, 0.3)]);
+Synth.new(\basschirp, [\freq, ~toFreq.(~key) * 2 * [8, 17, 20].choose.midiratio, \amp, 1, \out, 0, \rel, 20, \pan, rrand(-0.85, 0.5), \freqOsc, rrand(0.1, 0.5), \triMod, 1, \dec, rrand(0.2, 0.3)]);
+[4, 6, 8].choose;
+};
+)
+
+~bassCluster.();
+
+
+TempoClock.default.sched(0, {~bassCluster.()});
 TempoClock.default.clear;
