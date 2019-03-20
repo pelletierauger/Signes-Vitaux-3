@@ -39,8 +39,36 @@ Synth.new(\chirp, [\freq, key * 14.midiratio, \amp, 1, \out, 0, \rel, 20, \pan, 
 TempoClock.default.sched(0.1, {~chirps.()});
 TempoClock.default.clear;
 
+(
+~chirpCreak = {
+var degrees = Array.fill(3, {[1, 1, 1, 2].choose}) ++ [1, 1];
+var modif = -4.midiratio;
+var key = ~toFreq.(~key) * modif * 2;
+var notes = key * [0, 4, 7, 11, 14].midiratio;
+var arr = (notes * degrees).scramble;
+var steps = Array.fill(5, {[0.125, 0.25].choose});
+var baseOsc = rrand(1, 12);
+var minOsc = baseOsc - 0.05 / 12;
+var maxOsc = baseOsc + 0.05 / 12;
+var pulse = Pbind(
+    \instrument, \chirp,
+    \dur, Pseq(steps, 10),
+    \freq, Pseq(arr, inf) * 2,
+    \atk, 0.15,  
+    \rel, 0.25 / \dur, 
+    \freqOsc, rrand(minOsc, maxOsc),
+//     \amp, Pseries(6, -0.06, inf),
+    \amp, 1,
+    \pan, Pwhite(-0.5, 0.5, inf),
+    \out, 0
+).play();
+steps.sum * 10;
+};
+)
 
 
+TempoClock.default.sched(0, {~chirpCreak.()});
+TempoClock.default.clear;
 
 (
 SynthDef.new(\newChirps, {
