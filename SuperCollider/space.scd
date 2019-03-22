@@ -177,14 +177,15 @@ SynthDef.new(\souffle, {
     arg low = 500, top = 10000, freq = 440, out = 0, gate = 1, amp = 0.01, s = 0;
     var sig, env, mod, envAmp, envFil;
     sig = WhiteNoise.ar([1,1]);
-    env = EnvGen.ar(Env.adsr(2, 0.1, 1, 4), gate, doneAction:2);
+    env = EnvGen.ar(Env.adsr(2, 0.1, 1, 15), gate, doneAction:2);
 //     mod = SinOsc.kr(modFreq, 3pi/2).exprange(0.001, 1);
 //     sig = (sig * 0.2) + Ringz.ar(sig, freq, 0.1, 0.2);
         sig = Ringz.ar(sig, freq, 0.1, 0.2);
     envAmp = EnvGen.kr(Env.circle([0, 1], [2 + s, 2 + s]));
-    envFil = EnvGen.kr(Env.circle([low, top], [4 + (s * 2), 0]));
-    sig = LPF.ar(sig, envFil);
-    sig = sig * env * amp * envAmp;
+//     envFil = EnvGen.kr(Env.circle([low, top], [4 + (s * 2), 0]));
+    envFil = SinOsc.kr(0.1, mul: 0.5, add: 0.5) * 5000;
+    sig = LPF.ar(sig, 500 + envFil);
+    sig = sig * env * amp;
     Out.ar(out, sig);
 }, [3, 3, 3]).add;
 )
@@ -199,12 +200,15 @@ SynthDef.new(\souffle, {
 ~soufflants.do({|item| item.set(\top, 10000)});
 )
 
+(
+~shimmerC.stop;
 ~soufflants.do({|item| item.set(\gate, 0)});
+)
 (
 var fr = ~toFreq.(~key) * 16;
 ~soufflants = {Synth.new(\souffle, [
     \s, [0, 1, 2, 3, 4].choose,
-    \freq, fr * [0, 4, 7, 11].choose.midiratio
+    \freq, fr * [0.5, 1].choose * [0, 4, 7, 11].choose.midiratio
 ])}!32;
 )
 
