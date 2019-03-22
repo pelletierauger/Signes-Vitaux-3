@@ -5,8 +5,14 @@ sendSuperCollider = function() {
         if ((intensity > 0) !== positive) {
             positive = (intensity > 0);
             console.log("Changed!");
-            let har = (positive) ? 0.257 : 0.584;
+//          let har = (positive) ? 0.258 : 0.584;
+//          New range for a better harmony
+            let har = (positive) ? 0.2595 : 0.584;
+            har = (positive) ? 0.2167 : 0.584;
+            har = (positive) ? 0.792 : 0.5835;
+            har = (positive) ? 0.792 : 0.93;
             let key = (positive) ? "Db1" : "D#1";
+            key = "Db1";
             logJavaScriptConsole("sending har: " + har +  ", key: " + key);
 //             socket.emit('supercollider', {
 //                 name: "/har",
@@ -29,7 +35,9 @@ sendSuperCollider = function() {
         intensity = constrain(intensity, 0.005, 0.015);
 //         logJavaScriptConsole(intensity); 
 //         let loc = Math.floor(map(intensity, 0.005, 0.015, 0, 0.004));
-        let loc = map(intensity, 0.005, 0.015, 0.004, 0) ;
+//      let loc = map(intensity, 0.005, 0.015, 0.004, 0) ;
+//      New range for a better harmony
+        let loc = map(intensity, 0.005, 0.015, 0.003, 0) ;
 //         socket.emit('supercollider', {
 //             name: "/loc",
 //             value: loc
@@ -53,5 +61,5 @@ sendSuperCollider = function() {
     }
 }
 
-drawIncrement = 0.0125;
+drawIncrement = 0.0125 * 0.125;
 // log("ms");
