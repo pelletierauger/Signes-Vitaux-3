@@ -75,6 +75,7 @@ SynthDef(\guitare, {
 );
 )
 
+~har.source = Pn(0.93, inf);
 ~key;
 ~har.asStream.next;
 ~shimPos.asStream.next;
@@ -112,12 +113,12 @@ SynthDef(\guitare, {
 //     \rel, 1 / 128 * Pseq([Pgeom(0.5, 1.1, 4 * 16)], inf),
     \rel, 0.1,
     \atk, 0.5,
-    \rate, [0.5, 1] * -3.midiratio,
+    \rate, [0.5, 1] * -8.midiratio,
     \amp, Pseq([Pgeom(0.5, 1.065, 4 * 16)], inf) * 0.5,
-    \amp, 4,
+    \amp, 8,
     \pan, Pwhite(-0.5, 0.5, inf),
-    \out, 0
-).play(t, quant: 1);
+    \out, ~highPassBus
+).play(t);
 )
 
 ~key;
@@ -125,10 +126,10 @@ rrand(1.0, 20);
 
 (
 // Clear synth
-~f = {
+~twinkleCluster = {
 if (~dur.asStream.next > 0.005, {
     var key = ~key;
-    var modif = 1.midiratio * 0.midiratio;
+    var modif = 0.midiratio * 0.midiratio;
     var note1 = ~toFreq.(key) * [0, 12].midiratio.choose * modif;
     var note2 = ~toFreq.(key) * [24, 36].midiratio.choose * 4.midiratio * modif;
     var note3 = ~toFreq.(key) * [24, 36].midiratio.choose * 7.midiratio * modif;
@@ -164,3 +165,9 @@ if (~dur.asStream.next > 0.005, {
 
 TempoClock.default.sched(0.1, {~f.()});
 TempoClock.default.clear;
+
+(
+~twinkleClusters = Task {
+{~twinkleCluster.(); 4.wait;}.loop;}.start;
+)
+~twinkleClusters.stop;

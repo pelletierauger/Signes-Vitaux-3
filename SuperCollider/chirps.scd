@@ -21,7 +21,7 @@ SynthDef.new(\chirp, {
 
 (
 ~chirps = {
-var modif = -4.midiratio * 0.midiratio;
+var modif = 0.midiratio * 0.midiratio;
 var key = ~toFreq.(~key) * [36, 48, 48].choose.midiratio * modif;
 var baseOsc = rrand(1, 12);
 var minOsc = baseOsc - 0.05 / 12;
@@ -40,9 +40,19 @@ TempoClock.default.sched(0.1, {~chirps.()});
 TempoClock.default.clear;
 
 (
+~chirpClusters = Task {
+{
+~chirps.();
+6.wait;
+}.loop;}.start;
+)
+~chirpClusters.stop;
+
+
+(
 ~chirpCreak = {
 var degrees = Array.fill(3, {[1, 1, 1, 2].choose}) ++ [1, 1];
-var modif = -4.midiratio;
+var modif = [0].midiratio;
 var key = ~toFreq.(~key) * modif * 2;
 var notes = key * [0, 4, 7, 11, 14].midiratio;
 var arr = (notes * degrees).scramble;
@@ -58,7 +68,7 @@ var pulse = Pbind(
     \rel, 0.25 / \dur, 
     \freqOsc, rrand(minOsc, maxOsc),
 //     \amp, Pseries(6, -0.06, inf),
-    \amp, 1,
+    \amp, 1.5,
     \pan, Pwhite(-0.5, 0.5, inf),
     \out, 0
 ).play();
@@ -69,6 +79,25 @@ steps.sum * 10;
 ~chirpCreak.();
 TempoClock.default.sched(0, {~chirpCreak.()});
 TempoClock.default.clear;
+
+
+(
+var test = ~chirpCreak.();
+test.postln;
+)
+
+(
+~twinkleClusters.stop;
+~chirpClusters.stop;
+~creakyClusters = Task {
+{
+var waitValue = ~chirpCreak.();
+waitValue.wait;
+}.loop;}.start;
+)
+~creakyClusters.stop;
+
+
 
 (
 SynthDef.new(\newChirps, {
@@ -112,6 +141,7 @@ Synth.new(\newChirps, [\freq, key * 14.midiratio, \amp, 1, \out, 0, \rel, 20, \p
 baseOsc.postln;
     }).play;
     [6, 8, 10].choose;
+    nil;
 };
 )
 
@@ -122,7 +152,7 @@ TempoClock.default.clear;
 
 (
 SynthDef.new(\basschirp, {
-    arg out, freq = 220, lon = 3, amp = 1, pan = 0, atk = 2, rel = 2, freqOsc = 6, triMod = 0.5, dec = 0.2;
+    arg out, freq = 220, lon = 3, amp = 1, pan = 0, atk = 2, rel = 2, freqOsc = 6, triMod = 0.5, dec = 0.2, low = 200;
     var sig, sig2, env, osc, osc2, loopEnv, loopEnv2, linPass;
     osc = LFTri.ar(freqOsc, mul: 0.5, add:0.5);
     osc2 = LFTri.ar(1, pi, mul: 0.5, add:0.5);
@@ -132,23 +162,26 @@ SynthDef.new(\basschirp, {
     sig = SinOsc.ar([freq, freq + 0.1]) * 0.1;
     sig = sig + (LFTri.ar([freq + 0.1, freq + 0.2] * 1, pi) * 0.02);
     sig = sig * env * amp;
-    sig = (sig * loopEnv) * (1 + LFTri.ar([freq + 1, freq + 1.1] * 1.001 * triMod, mul: loopEnv * 1) * (1 + WhiteNoise.ar(mul: loopEnv * 0.1)));
-//     sig = sig * LFSaw.ar([freq + 0.1, freq + 0.2] * 2.001);
-    linPass = XLine.kr(200, 6000, atk + rel * 0.5);
+    sig = (sig * loopEnv) * (1 + LFTri.ar([freq + 1, freq + 1.1] * 1.001 * triMod, mul: loopEnv * 1));
+//     sig = sig + (sig * LFTri.ar([freq + 0.1, freq + 0.2] * 1.01) * 0.25);
+    linPass = XLine.kr(low, 6000, atk + rel * 0.5);
     sig = LPF.ar(sig, linPass) * 4;
+    sig = HPF.ar(sig, 250);
     sig = Balance2.ar(sig[0], sig[1], pan, 1);
     Out.ar(out, sig);
 }).add;
 )
 
 ~f.();
+~chirps.();
 
 (
 ~bassCluster = {
-Synth.new(\basschirp, [\freq, ~toFreq.(~key) * 2 * [1, 13].choose.midiratio, \amp, 1, \out, 0, \rel, 20, \pan, rrand(-0.85, 0.5), \freqOsc, rrand(0.1, 0.5), \triMod, 0.5, \dec, rrand(0.2, 0.3)]);
-Synth.new(\basschirp, [\freq, ~toFreq.(~key) * 2 * [8, 17, 20].choose.midiratio, \amp, 1, \out, 0, \rel, 20, \pan, rrand(-0.85, 0.5), \freqOsc, rrand(0.1, 0.5), \triMod, 1, \dec, rrand(0.2, 0.3)]);
-[4, 6, 8].choose;
+Synth.new(\basschirp, [\freq, ~toFreq.(~key) * 2 * [1, 13].choose.midiratio * -1.midiratio, \amp, 1.7, \out, ~reverbBus, \rel, 20, \pan, rrand(-0.85, 0.5), \freqOsc, rrand(0.1, 0.5), \triMod, 0.5, \dec, rrand(0.2, 0.3), \low, rrand(200, 800)]);
+Synth.new(\basschirp, [\freq, ~toFreq.(~key) * 2 * [8, 17, 20].choose.midiratio * -1.midiratio, \amp, 1.7, \out, ~reverbBus, \rel, 20, \pan, rrand(-0.85, 0.5), \freqOsc, rrand(0.1, 0.5), \triMod, 1, \dec, rrand(0.2, 0.3), \low, rrand(200, 800)]);
+[2, 4, 6].choose;
 };
+
 )
 
 ~bassCluster.();
@@ -156,3 +189,10 @@ Synth.new(\basschirp, [\freq, ~toFreq.(~key) * 2 * [8, 17, 20].choose.midiratio,
 
 TempoClock.default.sched(0, {~bassCluster.()});
 TempoClock.default.clear;
+
+
+(
+~bassClusters = Task {
+{~bassCluster.(); [2, 4, 6].choose.wait;}.loop;}.start;
+)
+~bassClusters.stop;

@@ -22,6 +22,12 @@ SynthDef(\marimVerb, {
 }).add;
 )
 
+
+(
+~marimVerbSynth.free;
+~marimVerbSynth = Synth.new(\marimVerb, [\in, ~marimBus, \out, 0], ~fxGroup);
+)
+
 (
 SynthDef(\marimba, {
     arg	freq=440, detune=3.0, atk=6, sus=4, rel=6, curve1=1, curve2=(-1),
@@ -48,11 +54,13 @@ SynthDef(\marimba, {
 
 (
 // ~marim.free;
-var fr = (([23,35,47,50,52,59,61,63,64,76,78].choose) + rrand(-7,7)).midicps * ((1..8).choose);
+// var fr = (([23,35,47,50,52,59,61,63,64,76,78].choose) + rrand(-7,7)).midicps * ((1..8).choose);
+~marimCluster = {
+var fr = ~toFreq.(~key) * [16].choose * [12, 24, 19].choose.midiratio;
 ~marim = Synth(
     \marimba,
     [
-        \freq, 3,
+        \freq, [4, 8].choose,
         \detune, 0,
         \minBpfHz, 0.01,
         \maxBpfHz,8.expexp(1.0,16.0,0.1,16.0),
@@ -60,12 +68,24 @@ var fr = (([23,35,47,50,52,59,61,63,64,76,78].choose) + rrand(-7,7)).midicps * (
         \maxRq, exprand(0.008,0.08),
         \minCf, fr,
         \maxCf, fr * [1,1.1,1.5].wchoose([0.87,0.1,0.03]),
-        \amp, exprand(0.15,0.25),
+        \amp, 1,
         \atk, exprand(0.7,8),
         \rel, 5,
         \sus, rrand(6,10.0),
         \spread, exprand(1.5,8.0),
-        \out, 0,
+        \out, ~reverbBus,
     ],
 );
+4;
+};
 )
+
+~marimCluster.();
+TempoClock.default.sched(0, {~marimCluster.()});
+TempoClock.default.clear;
+
+(
+~marimClusters = Task {
+{~marimCluster.(); [4].choose.wait;}.loop;}.start;
+)
+~marimClusters.stop;

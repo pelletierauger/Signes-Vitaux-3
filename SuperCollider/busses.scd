@@ -70,14 +70,14 @@ SynthDef.new(\passes, {
     var sig;
     sig = In.ar(in, 2);
 //     sig = (sig * 0.02625) + HPF.ar(sig, FSinOsc.kr(XLine.kr(0.7, 300, 20), 0, 300, 600), 0.75);
-    sig = LPF.ar(sig, 200);
+    sig = LPF.ar(sig, 400);
     Out.ar(0, sig);
 }).add;
 )
 
 (
 ~passesSynth.free;
-~passesSynth = Synth.new(\reverb, [\in, ~passesBus, \out, ~reverbBus], ~fxGroup);
+~passesSynth = Synth.new(\passes, [\in, ~passesBus, \out, ~reverbBus], ~fxGroup);
 )
 
 
@@ -86,12 +86,13 @@ SynthDef.new(\highPass, {
     arg in, out = 0;
     var sig;
     sig = In.ar(in, 2);
-    sig = HPF.ar(sig, 1000, 0.75);
-    Out.ar(0, sig);
+    sig = HPF.ar(sig, 300, 0.75);
+    sig = LPF.ar(sig, 20000);
+    Out.ar(~reverbBus, sig);
 }).add;
 )
 
 (
 ~highPassSynth.free;
-~highPassSynth = Synth.new(\reverb, [\in, ~highPassBus, \out, ~reverbBus], ~fxGroup);
+~highPassSynth = Synth.new(\highPass, [\in, ~highPassBus, \out, ~reverbBus], ~fxGroup);
 )

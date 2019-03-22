@@ -20,7 +20,7 @@ x.set(\gate, 0);
 if (~dur.asStream.next > 0.01, {
     var delay = 0;
     var degrees = Array.fill(3, {[1, 1, 1, 2].choose}) ++ [1, 1];
-    var modif = -4.midiratio;
+    var modif = 0.midiratio;
     var key = ~toFreq.(~key) * modif * 2;
     var notes = key * [0, 4, 7, 11, 14].midiratio;
     var arr = (notes * degrees).scramble;
@@ -49,3 +49,10 @@ floor(rrand(10.0, 20.0));
 
 TempoClock.default.sched(0, {~moogArp.()});
 TempoClock.default.clear;
+
+(
+~creakyClusters.stop;
+~moogClusters = Task {
+{~moogArp.(); floor(rrand(10.0, 20.0)).wait;}.loop;}.start;
+)
+~moogClusters.stop;

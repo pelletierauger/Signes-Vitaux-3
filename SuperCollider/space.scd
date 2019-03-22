@@ -26,7 +26,7 @@ x = Synth.new(\space, [\freq, 440 * 3.midiratio, \sustime, 3, \amp, 0.3]);
 (
 ~squeakyCloud = {
 5.do({
-var modif = -4.midiratio * 0.midiratio;
+var modif = -5.midiratio * 0.midiratio;
 var scale = [0, 4, 7, 9, 11];
 var key = ~toFreq.(~key) * 48.midiratio * modif * scale.choose.midiratio;
 TempoClock.default.sched(rrand(0.1, 1.75), {
@@ -55,22 +55,23 @@ s.avgCPU;
 
 (
 SynthDef(\space, {
-    arg amp = 1, out = 0;
+    arg amp = 1, out = 0, freq = 444;
     var x = {|i|
         r = [ 3, 5, 8, 9 ] / 8;
         d = rrand(0.25*i, 3*i).round(0.25);
-        f = i % 3 + 1 * 444 * r.wrapAt(i);
-        Env.sine(12, 0.01).ar(0, TDelay.ar(Impulse.ar(1/12), d)) * Resonz.ar(WhiteNoise.ar(0.5), f, 0.01);  
+//         f = i % 3 + 1 * r.wrapAt(i);
+           f = [0, 4, 7, 11].midiratio;
+        Env.sine(12, 0.01).ar(0, TDelay.ar(Impulse.ar(1/12), d)) * Resonz.ar(WhiteNoise.ar(0.5), f * freq, 0.01);  
     } ! 8;
     Out.ar(0, HPF.ar(Limiter.ar(55 * GVerb.ar(Splay.ar(x) * amp, 99, 10).flop.sum), 30).sanitize);
 }, [3]).add;
 )
 
 ~space.free;
-~space = Synth.new(\space);
+~space = Synth.new(\space, [\freq, ~toFreq.(~key) * 16]);
 ~space.set(\amp, 4);
 
-
+~toFreq.(~key) * 16;
 
 
 (
@@ -148,3 +149,93 @@ f = i % 3 + 1 * 444 * r.wrapAt(i);
 6 % 3;
 a = [0, 1, 2, 3, 4];
 a.wrapAt(13);
+
+
+//     envf = XLine.kr(400, 20000, sustime * 0.1);
+//     sig = LPF.ar(sig, envf);
+
+(
+SynthDef.new(\brnoise, {
+    arg out = 0, freq = 220, modFreq = 0.1, gate = 1, amp = 0.1;
+    var sig, env, mod;
+    sig = BrownNoise.ar(0.15!2);
+    env = EnvGen.ar(Env.adsr(2, 0.1, 1, 10), gate, doneAction:2);
+    mod = SinOsc.kr(modFreq, 3pi/2).exprange(0.001, 1);
+    sig = (sig * 0.2) + Ringz.ar(sig, freq, 0.1, 0.2);
+    sig = sig * env * amp * mod;
+    Out.ar(out, sig);
+}).add;
+)
+
+~ocean.set(\gate, 0);
+~ocean = Synth.new(\brnoise, [\freq, ~toFreq.(~key) * 16]);
+
+
+
+(
+SynthDef.new(\souffle, {
+    arg low = 500, top = 10000, freq = 440, out = 0, gate = 1, amp = 0.01, s = 0;
+    var sig, env, mod, envAmp, envFil;
+    sig = WhiteNoise.ar([1,1]);
+    env = EnvGen.ar(Env.adsr(2, 0.1, 1, 4), gate, doneAction:2);
+//     mod = SinOsc.kr(modFreq, 3pi/2).exprange(0.001, 1);
+//     sig = (sig * 0.2) + Ringz.ar(sig, freq, 0.1, 0.2);
+        sig = Ringz.ar(sig, freq, 0.1, 0.2);
+    envAmp = EnvGen.kr(Env.circle([0, 1], [2 + s, 2 + s]));
+    envFil = EnvGen.kr(Env.circle([low, top], [4 + (s * 2), 0]));
+    sig = LPF.ar(sig, envFil);
+    sig = sig * env * amp * envAmp;
+    Out.ar(out, sig);
+}, [3, 3, 3]).add;
+)
+
+
+(
+~soufflants.do({|item| item.set(\low, 10000)});
+~soufflants.do({|item| item.set(\top, 500)});
+)
+(
+~soufflants.do({|item| item.set(\low, 500)});
+~soufflants.do({|item| item.set(\top, 10000)});
+)
+
+~soufflants.do({|item| item.set(\gate, 0)});
+(
+var fr = ~toFreq.(~key) * 16;
+~soufflants = {Synth.new(\souffle, [
+    \s, [0, 1, 2, 3, 4].choose,
+    \freq, fr * [0, 4, 7, 11].choose.midiratio
+])}!32;
+)
+
+~soufflants[3].get(\freq);
+~soufflants[0].get(\freq, { arg value; ("freq is now:" + value + "Hz").postln; });
+
+(
+~soufflants.do({
+|item|
+    var oldFreq = 440;
+    h = 440;
+    item.get(\freq, {|v| h = v;});
+    item.set(\freq, h * 2.midiratio);
+});
+)
+
+(
+h = 0;
+~soufflants[5].get(\freq, {|v|h = v;});
+// h;
+)
+h;
+
+~soufflants.do({|item| item.set(\top, 10000)});
+
+s.numSynths;
+
+~soufflant.set(\gate, 0);
+~soufflant = Synth.new(\souffle);
+~soufflant2.set(\gate, 0);
+~soufflant2 = Synth.new(\souffle);
+~soufflant3.set(\gate, 0);
+~soufflant3 = Synth.new(\souffle);
+

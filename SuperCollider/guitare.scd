@@ -363,3 +363,33 @@ n.next;
     \out, ~reverbBus
 ).play(t, quant: 1);
 )
+
+
+0.2595, 0.0035
+~har range = 0.258, 0.584
+~loc range = 0.004, 0
+(
+~shimmerC.stop;
+~shimmerC = Pbind(
+    \instrument, \guitare,
+    \dur, 1 / 16,
+    // En La majeur
+    // Dmaj7, A, Dmaj7, Cm
+    // IV, I, IV, iii
+    \spos, Pseq([0.237, 0.2545, 0.237, 0.252].stutter(4 * 16), inf) + Pwhite(0.001, 0.002, inf),
+    \spos, 0.584 - 0.003 + Pwhite(-0.0001, 0.0001, inf),
+//     \spos, 0.2167 - 0.003 + Pwhite(-0.0001, 0.0001, inf),
+//     \spos, 0.2595 - 0.003 + Pwhite(-0.0001, 0.0001, inf),
+//         \spos, 0.792 - 0.003 + Pwhite(-0.0001, 0.0001, inf),
+//     \spos, 0.93 - 0.003 + Pwhite(-0.0001, 0.0001, inf),
+//     \spos, 0.584 - 0.004 + Pwhite(-0.0001, 0.0001, inf),
+//     \rel, 1 / 128 * Pseq([Pgeom(0.5, 1.1, 4 * 16)], inf),
+    \rel, 0.1,
+    \atk, 0.5,
+    \rate, [0.5, 1] * -8.midiratio,
+    \amp, Pseq([Pgeom(0.5, 1.065, 4 * 16)], inf) * 0.5,
+    \amp, 8,
+    \pan, Pwhite(-0.5, 0.5, inf),
+    \out, ~highPassBus
+).play(t);
+)
