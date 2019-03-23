@@ -60,20 +60,20 @@ ky.postln;
 };
 )
 
-~rect1.(0.65);
-~rect2.(0.65);
-~rect3.(0.75);
-~rect4.(0.75);
+~rect1.(0.85);
+~rect2.(0.85);
+~rect3.(0.85);
+~rect4.(0.85);
 ~squeakyCloud.();
 
 (
 // ~rect1 = {
-var ky = ~toFreq.(~key) * 8 * 0.midiratio;
+var ky = ~toFreq.(~key) * 4 * 0.midiratio;
 ky.postln;
 [[-12, 0, 12].choose, [4, 16].choose * 0, 2, 7, 14].do({
     arg item, i;
     item.postln;
-    x = Synth.new(\rectangle, [\freq, ky * item.midiratio, \lfoFreq, rrand(0.1, 6), \pMod, rrand(0.1, 3), \pan, rrand(-1.0, 1.0), \amp, 0.65]);
+    x = Synth.new(\rectangle, [\freq, ky * item.midiratio, \lfoFreq, rrand(0.1, 6), \pMod, rrand(0.1, 3), \pan, rrand(-1.0, 1.0), \amp, 0.85]);
 });
 )
 
