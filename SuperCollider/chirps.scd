@@ -146,6 +146,8 @@ baseOsc.postln;
 };
 )
 
+
+~noisyPestilence.();
 TempoClock.default.sched(0.1, {~noisyPestilence.()});
 TempoClock.default.clear;
 
