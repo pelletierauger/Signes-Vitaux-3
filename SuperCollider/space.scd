@@ -243,3 +243,66 @@ s.numSynths;
 ~soufflant3.set(\gate, 0);
 ~soufflant3 = Synth.new(\souffle);
 
+
+
+
+(
+SynthDef.new(\friture, {
+    arg out = 0, freq = 440, pan = 0, atk = 1, dec = 1, rel = 2, sustain = 0.001, amp = 1, gate = 1, fm1freq = 4.001, lpff = 5000;
+    var sig, env, lfo;
+//     env = EnvGen.ar(Env.new([0.0, 1.0, 0.00001], [atk, rel], [\linear, \exponential],1), gate, doneAction: 2);
+    env = EnvGen.kr(Env.new([0.0, 1.0, 0.0], [atk, rel]), doneAction:2);
+    sig = Pulse.ar([freq, freq + 1], width: 0.9) * 0.1;
+//     sig = LFTri.ar([freq, freq + 1]) * 0.1;
+    sig = sig * LFSaw.ar([freq - 1, freq] * -5.midiratio * fm1freq);
+    sig = sig * Pulse.ar([freq + 1, freq - 1] * -5.midiratio * 1.0001 * 1, width: 0.9);
+    sig = sig * amp * env;
+    sig = LPF.ar(sig, 10000);
+//     sig = HPF.ar(sig, 2000);
+    sig = Balance2.ar(sig[0], sig[1], pan, 1);
+    Out.ar(out, sig);
+}, 8!10).add;
+)
+
+s.numSynths;
+~frimas.set(\fm1freq, 2.001);
+~frimas.set(\fm1, 2.001);
+~frimas.set(\gate, 0);
+~frimas.release();
+~frimas.free;
+~frimas = Synth.new(\friture, [\freq, ~toFreq.("Db6"), \atk, 0.001, \rel, 0.1]);
+
+
+(
+~nouvelleFriture.stop;
+~nouvelleFriture = Pbind(
+    \instrument, \friture,
+    \dur, Pseq([Pwhite(0.005, 0.1).stutter(24) * 2], inf),
+//     \freq, ~toFreq.("Db6") * Pseq([Prand([0.5, 1, 2], inf)].stutter(8), inf),
+    \freq, ~toFreq.("Db6") * Prand([0, 2, 4, 5, 7, 11], inf).stutter(48).midiratio,
+//     \freq, ~toFreq.("Db6"),
+    \amp, Pwhite(0.1, 2, inf).stutter(16),
+    \rel, Pwhite(0.1, 0.3, inf).stutter(16) * 4,
+    \atk, 0.01,
+//     \lpff, Pwhite(5000, 20000, inf).stutter(16).round,
+    \lpff, 20000,
+    \sustain, 0.001,
+    \fm1freq, Prand([4.001, 2.001, 1.001].stutter(8), inf),
+    \pan, Pwhite(-1.0, 1.0, inf),
+    \out, ~reverbBus
+).play();
+)
+
+~tt = Pwhite(0.1, 0.2, inf).stutter(8).asStream;
+~tt.next;
+
+
+e = Env([0.2,1.0,0.0],[0.1,3.0],0,1); //releaseNode at node 1, which is the pair of 0.0 level in the first array and 3.0 seconds in the second. 
+
+
+
+a= {arg gate=1; EnvGen.ar(e,gate,doneAction:2)*SinOsc.ar(550,0,0.1)}.play
+
+
+
+a.set(\gate, 0); //takes 3.0 seconds to fade out
