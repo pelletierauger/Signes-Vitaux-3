@@ -115,7 +115,7 @@ SynthDef(\guitare, {
     \atk, 0.5,
     \rate, [0.5, 1] * -8.midiratio,
     \amp, Pseq([Pgeom(0.5, 1.065, 4 * 16)], inf) * 0.5,
-    \amp, 8,
+    \amp, 12,
     \pan, Pwhite(-0.5, 0.5, inf),
     \out, ~highPassBus
 ).play(t);
