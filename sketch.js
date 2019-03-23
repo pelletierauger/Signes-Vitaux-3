@@ -7,7 +7,7 @@ let gl, shaderProgram;
 let time;
 let positive = true;
 let intensity;
-let drawCount = 0;
+let drawCount = 20;
 let drawIncrement = 0.00125;
 
 // a shader variable
