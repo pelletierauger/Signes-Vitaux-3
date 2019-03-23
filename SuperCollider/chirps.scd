@@ -68,7 +68,7 @@ var pulse = Pbind(
     \rel, 0.25 / \dur, 
     \freqOsc, rrand(minOsc, maxOsc),
 //     \amp, Pseries(6, -0.06, inf),
-    \amp, 1.5,
+    \amp, 2.5,
     \pan, Pwhite(-0.5, 0.5, inf),
     \out, 0
 ).play();
@@ -89,6 +89,7 @@ test.postln;
 (
 ~twinkleClusters.stop;
 ~chirpClusters.stop;
+~bassClusters.stop;
 ~creakyClusters = Task {
 {
 var waitValue = ~chirpCreak.();
