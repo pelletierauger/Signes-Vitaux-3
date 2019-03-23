@@ -281,8 +281,8 @@ s.numSynths;
     \dur, Pseq([Pwhite(0.05, 0.1).stutter(24) * 1], inf),
 //     \freq, ~toFreq.("Db6") * Pseq([Prand([0.5, 1, 2], inf)].stutter(8), inf),
 //     \freq, ~toFreq.("Db6") * Prand([0, 2, 4, 5, 7, 11], inf).stutter(48).midiratio,
-    \freq, ~toFreq.("Db6"),
-    \amp, Pwhite(0.1, 2, inf).stutter(16),
+    \freq, ~toFreq.("Db6") * Prand([0.5, 1, 1, 1], inf),
+    \amp, Pwhite(0.1, 1.5 * 0.5, inf).stutter(16),
     \rel, Pwhite(0.05, 0.3, inf).stutter(16) * 1,
     \atk, 0.01,
 //     \lpff, Pwhite(5000, 20000, inf).stutter(16).round,
@@ -294,7 +294,10 @@ s.numSynths;
     \out, ~reverbBus
 ).play();
 )
-
+4*4;
+(4!4).sum;
+[4].stutter(4).sum;
+(1!4).stutter((1!4).sum).sum
 ~tt = Pwhite(0.1, 0.2, inf).stutter(8).asStream;
 ~tt.next;
 
