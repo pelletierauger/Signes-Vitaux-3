@@ -87,6 +87,8 @@ test.postln;
 )
 
 (
+// Le printemps des laséristes
+~nouvelleFriture.stop;
 ~twinkleClusters.stop;
 ~chirpClusters.stop;
 ~bassClusters.stop;
