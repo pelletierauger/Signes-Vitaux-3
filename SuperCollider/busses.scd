@@ -86,8 +86,8 @@ SynthDef.new(\highPass, {
     arg in, out = 0;
     var sig;
     sig = In.ar(in, 2);
-    sig = HPF.ar(sig, 300, 0.75);
-    sig = LPF.ar(sig, 20000);
+    sig = HPF.ar(sig, 200, 0.75);
+//     sig = LPF.ar(sig, 20000);
     Out.ar(~reverbBus, sig);
 }).add;
 )
