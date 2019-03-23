@@ -249,15 +249,16 @@ s.numSynths;
 (
 SynthDef.new(\friture, {
     arg out = 0, freq = 440, pan = 0, atk = 1, dec = 1, rel = 2, sustain = 0.001, amp = 1, gate = 1, fm1freq = 4.001, lpff = 5000;
-    var sig, env, lfo;
+    var sig, env, lfo, envf;
 //     env = EnvGen.ar(Env.new([0.0, 1.0, 0.00001], [atk, rel], [\linear, \exponential],1), gate, doneAction: 2);
     env = EnvGen.kr(Env.new([0.0, 1.0, 0.0], [atk, rel]), doneAction:2);
     sig = Pulse.ar([freq, freq + 1], width: 0.9) * 0.1;
 //     sig = LFTri.ar([freq, freq + 1]) * 0.1;
     sig = sig * LFSaw.ar([freq - 1, freq] * -5.midiratio * fm1freq);
-    sig = sig * Pulse.ar([freq + 1, freq - 1] * -5.midiratio * 1.0001 * 1, width: 0.9);
+    sig = sig * Pulse.ar([freq + 1, freq - 1] * -5.midiratio * 1.0001 * 1, width: 0.2);
     sig = sig * amp * env;
-    sig = LPF.ar(sig, 10000);
+    envf = XLine.kr(10000.0, 500.0, 0.4);
+    sig = LPF.ar(sig, envf);
 //     sig = HPF.ar(sig, 2000);
     sig = Balance2.ar(sig[0], sig[1], pan, 1);
     Out.ar(out, sig);
@@ -277,17 +278,18 @@ s.numSynths;
 ~nouvelleFriture.stop;
 ~nouvelleFriture = Pbind(
     \instrument, \friture,
-    \dur, Pseq([Pwhite(0.005, 0.1).stutter(24) * 2], inf),
+    \dur, Pseq([Pwhite(0.05, 0.1).stutter(24) * 1], inf),
 //     \freq, ~toFreq.("Db6") * Pseq([Prand([0.5, 1, 2], inf)].stutter(8), inf),
-    \freq, ~toFreq.("Db6") * Prand([0, 2, 4, 5, 7, 11], inf).stutter(48).midiratio,
-//     \freq, ~toFreq.("Db6"),
+//     \freq, ~toFreq.("Db6") * Prand([0, 2, 4, 5, 7, 11], inf).stutter(48).midiratio,
+    \freq, ~toFreq.("Db6"),
     \amp, Pwhite(0.1, 2, inf).stutter(16),
-    \rel, Pwhite(0.1, 0.3, inf).stutter(16) * 4,
+    \rel, Pwhite(0.05, 0.3, inf).stutter(16) * 1,
     \atk, 0.01,
 //     \lpff, Pwhite(5000, 20000, inf).stutter(16).round,
     \lpff, 20000,
     \sustain, 0.001,
-    \fm1freq, Prand([4.001, 2.001, 1.001].stutter(8), inf),
+//     \fm1freq, Prand([4.001, 2.001, 1.001].stutter(8), inf),
+    \fm1freq, 4.001,
     \pan, Pwhite(-1.0, 1.0, inf),
     \out, ~reverbBus
 ).play();
