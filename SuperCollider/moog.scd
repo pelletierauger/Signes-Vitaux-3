@@ -17,7 +17,6 @@ x.set(\gate, 0);
 
 (
 ~moogArp = {
-if (~dur.asStream.next > 0.01, {
     var delay = 0;
     var degrees = Array.fill(3, {[1, 1, 1, 2].choose}) ++ [1, 1];
     var modif = 0.midiratio;
@@ -40,7 +39,6 @@ if (~dur.asStream.next > 0.01, {
         \amp, Pseries(6, -0.06, inf),
         \pan, Pwhite(-0.5, 0.5, inf)
     ).play();
-});
 floor(rrand(10.0, 20.0));
 };
 )
