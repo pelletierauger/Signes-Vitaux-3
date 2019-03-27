@@ -2,6 +2,12 @@
 SynthDef.new(\rectangle, {
     arg out = 0, freq = 440, pan = 0, lfoFreq = 1, atk = 1, dec = 1, sustime = 3, rel = 20, sus = 0.7, pMod = 0.2, amp = 1;
     var sig, env, lfo;
+    
+    // Safety measures, constraining values.
+    amp = min(max(amp, 0), 1.5);
+    freq = min(max(freq, 50), 1000);
+    
+    
     lfo = SinOsc.kr(lfoFreq, mul: 0.5, add: 0.5);
     env = EnvGen.ar(Env.new([0.0, 1.0, sus, sus, 0.00001], [atk, dec, sustime, rel], [\linear, \linear, \linear, \exponential]), doneAction: 2);
     sig = Pulse.ar([freq, freq+1], width: SinOsc.kr(pMod).range(0.25, 0.75), mul: 1.0, add: 0.0) * 0.11;
