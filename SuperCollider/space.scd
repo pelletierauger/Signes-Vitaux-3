@@ -36,6 +36,10 @@ TempoClock.default.sched(rrand(0.1, 1.75), {
 };
 )
 
+
+~singleSqueak = Synth.new(\squeak, [\freq, ~toFreq.(~key) * 16 * 0.midiratio, \sustime, 3, \amp, 0.1, \pan, rrand(-1.0, 1.0)]);
+
+
 ~squeakyCloud.();
 -1.midiratio;
 rrand(-1.0, 1.0);
