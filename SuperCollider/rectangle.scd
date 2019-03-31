@@ -66,6 +66,9 @@ ky.postln;
 };
 )
 
+~creakyClusters.stop;
+~noisyPestilence.();
+
 ~rect1.(0.85);
 ~rect2.(0.85);
 ~rect3.(0.85);
