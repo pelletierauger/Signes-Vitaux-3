@@ -1,5 +1,5 @@
 (
-SynthDef.new(\basschirp, {
+SynthDef.new(\pondchirp, {
     arg out, freq = 220, lon = 3, amp = 1, pan = 0, atk = 2, rel = 2, freqOsc = 6, triMod = 0.5, dec = 0.2, low = 200;
     var sig, sig2, env, osc, osc2, loopEnv, loopEnv2, linPass, panFlip;
     panFlip = [[0, 1], [1, 0]].choose;
@@ -21,14 +21,14 @@ SynthDef.new(\basschirp, {
 }).add;
 )
 (
-~bassCluster = {
-Synth.new(\basschirp, [\freq, ~toFreq.("F2") * [2,4].choose * [0, 4, 7, 12].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, rrand(0.1, 0.5) * 0.25, \triMod, 0.5, \dec, rrand(0.2, 0.3) * [0.5, 0.5, 1].choose, \low, rrand(200, 800)]);
-Synth.new(\basschirp, [\freq, ~toFreq.("F2") * [2,4].choose * [4, 9, 11, 19].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, rrand(0.1, 0.5) * 0.25, \triMod, 1, \dec, rrand(0.2, 0.3) * [0.5, 0.5, 1].choose, \low, rrand(200, 800)]);
+~pondCluster = {
+Synth.new(\pondchirp, [\freq, ~toFreq.("F2") * [2,4].choose * [0, 4, 7, 12].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, rrand(0.1, 0.5) * 0.25, \triMod, 0.5, \dec, rrand(0.2, 0.3) * [0.5, 0.5, 1].choose, \low, rrand(200, 800)]);
+Synth.new(\pondchirp, [\freq, ~toFreq.("F2") * [2,4].choose * [4, 9, 11, 19].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, rrand(0.1, 0.5) * 0.25, \triMod, 1, \dec, rrand(0.2, 0.3) * [0.5, 0.5, 1].choose, \low, rrand(200, 800)]);
 [2, 4, 6].choose;
 };
 )
 (
-~bassClusters = Task {
-{~bassCluster.(); [2, 4, 6].choose.wait;}.loop;}.start;
+~pondClusters = Task {
+{~pondCluster.(); [2, 4, 6].choose.wait;}.loop;}.start;
 )
-~bassClusters.stop;
+~pondClusters.stop;
