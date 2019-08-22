@@ -1,6 +1,6 @@
 (
-t = TempoClock.new;
-t.tempo_(50 * 4/60);
+~wt = TempoClock.new;
+~wt.tempo_(50 * 4/60);
 )
 
 ~solo1 = Buffer.read(s, "/Users/guillaumepelletier/Music/SuperCollider\ Recordings/en-mer-guitare-1.wav");
@@ -57,7 +57,7 @@ Pbind(
     \rate, [1],
     \pan, Pwhite(-0.75, 0.75, inf),
     \out, 0
-).play(t);
+).play(~wt);
 15.5;
 }
 )
@@ -67,7 +67,7 @@ Pbind(
 {
 var waitValue = ~wobblyCluster.();
 waitValue.wait;
-}.loop;}.start(t);
+}.loop;}.start(~wt);
 )
 ~wobblyClusters.stop;
 
