@@ -14,6 +14,7 @@
      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.2065, 0.195].stutter(16), inf),
      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.309].stutter(16), inf), //mellow
      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452].stutter(16), inf),
+          \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.309, 0.452, 0.24585].stutter(16), inf),
 //      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.4485].stutter(16), inf),
 //     \rel, 1 / 128 * Pseq([Pgeom(0.5, 1.1, 4 * 16)], inf),
     \rel, 0.1,
