@@ -14,6 +14,12 @@
      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.2065, 0.195].stutter(16), inf),
      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.309].stutter(16), inf), //mellow
      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.452, 0.309, 0.452, 0.452, 0.24585].stutter(16), inf),
+     \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452].stutter(16), inf),
+//       0.096
+//   beau et complet
+     \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.452, 0.452, 0.309, 0.452, 0.452, 0.452, 0.0285].stutter(16), inf),
+//   autre
+//      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.932, 0.795].stutter(32), inf),
      // dans le marais
 //      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.309, 0.452, 0.24585].stutter(16), inf),
 //      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.309, 0.452, 0.2465].stutter(16), inf),
