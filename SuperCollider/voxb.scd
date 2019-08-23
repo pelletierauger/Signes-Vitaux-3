@@ -39,12 +39,13 @@ SynthDef(\bvox, {
     \amp, 14 * Pdefn(\finB, 0.125),
     \pan, Pwhite(-0.5, 0.5, inf),
     \out, ~limitBus
-).play(t, quant: [8, 1]);
+).play(~vt, quant: [8, 1]);
 )
 
+(
 Pdefn(\finA, 0.25);
 Pdefn(\finB, 0.25);
-
+)
 
 (
 var amp = 0.9;

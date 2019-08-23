@@ -17,7 +17,7 @@ SynthDef(\solo1, {
     sig = sig * env;
     sig = sig * amp;
     sig = Balance2.ar(sig[0], sig[1], pan, 1);
-    Out.ar(out, sig);
+    Out.ar(~limitBus, sig);
 }).add;
 )
 
@@ -56,7 +56,7 @@ Pbind(
     * Pseq([1, 0.5], inf) * 0.5,
     \rate, [1],
     \pan, Pwhite(-0.75, 0.75, inf),
-    \out, 0
+    \out, ~limitBus
 ).play(~wt);
 15.5;
 }
@@ -71,7 +71,7 @@ waitValue.wait;
 )
 ~wobblyClusters.stop;
 
-
+~pondClusters.stop;
 ~shimmerC.stop;
 ~shimmerD.stop;
 ~shimmerE.stop;
