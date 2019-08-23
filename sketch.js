@@ -9,6 +9,8 @@ let positive = true;
 let intensity;
 let drawCount = 20;
 let drawIncrement = 0.00125;
+let vertexBuffer;
+let vertices = [];
 
 // a shader variable
 let texcoordShader;
@@ -23,10 +25,11 @@ function setup() {
     socket = io.connect('http://localhost:8080');
     // socket.on('receiveOSC', receiveOSC);
     pixelDensity(1);
-    // cnvs = createCanvas(windowWidth, windowWidth / 16 * 9, WEBGL);
-    noCanvas();
-    cnvs = document.getElementById('my_Canvas');
-    gl = cnvs.getContext('webgl', { preserveDrawingBuffer: true });
+    cnvs = createCanvas(windowWidth, windowHeight, WEBGL);
+    canvasDOM = document.getElementById('defaultCanvas0');
+    // noCanvas();
+    // cnvs = document.getElementById('my_Canvas');
+    gl = canvas.getContext('webgl');
     // canvasDOM = document.getElementById('my_Canvas');
     // canvasDOM = document.getElementById('defaultCanvas0');
     // gl = canvasDOM.getContext('webgl');
@@ -59,15 +62,17 @@ function setup() {
     // Set the view port
     gl.viewport(0, 0, cnvs.width, cnvs.height);
     frameRate(20);
-    background(0);
-    fill(255, 50);
+    // background(0);
+    // fill(255, 50);
     noStroke();
+
+    vertex_buffer = gl.createBuffer();
     if (!looping) {
         noLoop();
     }
 }
 
-function draw() {
+draw = function() {
     if (frameCount == 1) {
         setShaders();
     }
@@ -79,8 +84,6 @@ function draw() {
     // shaderProgram.setUniform('time', frameCount);
     // rect gives us some geometry on the screen
     // rect(0, 0, width, height);
-
-
     let aspect = cnvs.width / cnvs.height;
     let vertices = new Float32Array([-1, 1, 1, 1, 1, -1, // Triangle 1
         -1, 1, 1, -1, -1, 1 // Triangle 2
@@ -88,20 +91,14 @@ function draw() {
     let vbuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, vbuffer);
     gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
     let itemSize = 2;
     let numItems = vertices.length / itemSize;
-
     // gl.useProgram(shaderProgram);
-
     // program.uColor = gl.getUniformLocation(program, "uColor");
     // gl.uniform4fv(program.uColor, [0.0, 0.3, 0.0, 1.0]);
-
     shaderProgram.aVertexPosition = gl.getAttribLocation(shaderProgram, "aPosition");
     gl.enableVertexAttribArray(shaderProgram.aVertexPosition);
     gl.vertexAttribPointer(shaderProgram.aVertexPosition, itemSize, gl.FLOAT, false, 0, 0);
-
-
     gl.drawArrays(gl.TRIANGLES, 0, numItems);
     drawCount += drawIncrement;
 }

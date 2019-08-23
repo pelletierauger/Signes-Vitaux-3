@@ -1,11 +1,9 @@
+// gl.enable(gl.BLEND);
+// gl.clearColor(0.0, 0.0, 0.0, 1.0);
 
+// gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-gl.enable(gl.BLEND);
-gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    
-gl.blendFuncSeparate(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-vertex_buffer = gl.createBuffer();
-vertices = [];
+// vertices = [];
 
 setDotsShaders = function() {
     var vertCode = `
@@ -18,7 +16,7 @@ setDotsShaders = function() {
         center = vec2(gl_Position.x, gl_Position.y);
         center = 512.0 + center * 512.0;
         myposition = vec2(gl_Position.x, gl_Position.y);
-        gl_PointSize = 50.0 + cos((coordinates.x + coordinates.y) * 4000000.) * 5.;
+        gl_PointSize = 15.0 + cos((coordinates.x + coordinates.y) * 4000000.) * 2.;
     }
     // endGLSL
     `;
@@ -55,10 +53,10 @@ setDotsShaders = function() {
         } else {
             alpha = 0.0;
         }
-        alpha = smoothstep(0.0015, 0.000125, dist_squared) * 0.49;
+        alpha = smoothstep(0.015, 0.000125, dist_squared) * 0.49;
         float rando = rand(pos);
         // gl_FragColor = vec4(1.0, (1.0 - dist_squared * 40.) * 0.6, 0.0, alpha + ((0.12 - dist_squared) * 4.) - (rando * 0.2));
-        gl_FragColor = vec4(1.0, 0.2 - dist_squared, 0.0 + alpha * 120., (0.25 - dist_squared * 3.0 - (rando * 0.1)) * 0.25 + alpha) * 1.25;
+        gl_FragColor = vec4(1.0, 0.2 - dist_squared, 0.0 + alpha * 120., (3. - dist_squared * 12.0 - (rando * 0.1)) * 0.045 + alpha) * 1.25;
 //         gl_FragColor = vec4(1.0, 1.0 - dist_squared * 1.0, 0.0, 0.35 - dist_squared - (rando * 0.2));
         // gl_FragColor = vec4(d * 0.001, uv.x, 0.0, 0.25);
     }
@@ -92,31 +90,31 @@ setDotsShaders = function() {
     // Enable the attribute
     gl.enableVertexAttribArray(coord);
 }
-
+setDotsShaders();
 
 drawDots = function() {
     vertices = [];
     let xOffset = (noise(frameCount * 0.01) - 0.5) * 0.75;
     let yOffset = (noise((frameCount + 100) * 0.01) - 0.5) * 0.75;
-    let t = drawCount * 0.35 + 870;
+    let t = drawCount * 0.035 + 80;
     let fx = 1;
     let fy = 1;
     let x = 1;
     let y = 1;
     for (let i = 0; i < 30000; i += 1) {
-        x = sin(tan(i * 25 + t) + i * t * 0.0000001) * i * 0.00005;
-        y = cos(tan(i * 25 + t) + i * t * 0.0000001) * cos(t + i * 0.0002) * i * 0.00015;
-//         x *= sin(t * 50 * cos(y * 0.002));
-//         x *= cos(fx * fy * 0.001) * sin(x + t * 20);
-//         y *= cos(fx * fy * 0.001) * cos(x + t * 20);
+        x = sin(tan(i * 25 + t) + i * t * 0.000001) * i * 0.00005;
+        y = cos(tan(i * 25 + t) + i * t * 0.000001) * cos(t * 100 + i * 0.0002) * i * 0.00015;
+        //         x *= sin(t * 50 * cos(y * 0.002));
+        //         x *= cos(fx * fy * 0.001) * sin(x + t * 20);
+        //         y *= cos(fx * fy * 0.001) * cos(x + t * 20);
         x += sin(fx * 0.12) * 5;
         y += sin(fy * 0.12) * 5;
         fx = x;
         fy = y;
-//         x += (Math.random() - 0.5) * 0.00005;
-//         y += (Math.random() - 0.5) * 0.00005;
-        x += xOffset * 0.25;
-        y += yOffset * 0.25;
+        //         x += (Math.random() - 0.5) * 0.00005;
+        //         y += (Math.random() - 0.5) * 0.00005;
+        x += xOffset * 0.125;
+        y += yOffset * 0.125;
         vertices.push(x * 1.5 * 0.235, y * 0.8 * 0.235 - 0.25, 0.0);
     }
     // Create an empty buffer object to store the vertex buffer
@@ -156,15 +154,15 @@ draw = function() {
     // rect gives us some geometry on the screen
     // rect(0, 0, width, height);
     // console.log("Drawing!");
-//     setBGShaders();
-//     gl.uniform1f(time, drawCount);
-//     drawBG();
+    //     setBGShaders();
+    //     gl.uniform1f(time, drawCount);
+    //     drawBG();
     if (drawCount == 0) {
         setDotsShaders();
     }
     drawDots();
-//     setOverlayShaders();
-//     gl.uniform1f(time, drawCount);
-//     drawBG();
+    //     setOverlayShaders();
+    //     gl.uniform1f(time, drawCount);
+    //     drawBG();
     drawCount += drawIncrement;
 }
