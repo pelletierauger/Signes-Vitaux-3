@@ -72,6 +72,9 @@ waitValue.wait;
 ~wobblyClusters.stop;
 
 
+~shimmerC.stop;
+~shimmerD.stop;
+~shimmerE.stop;
 
 
 
