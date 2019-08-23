@@ -20,7 +20,7 @@
 //       0.096
 //   incomplet
 // -1e-4
-     \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.452, 0.452, 0.309].stutter(16), inf),
+//      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.452, 0.452, 0.452, 0.309].stutter(16), inf),
 //   beau et complet
      \spos, Pwhite() * 2 - 1 * 1e-4
          + Pseq([0.452!3, 0.309, 0.452!3, 0.0285].flat.stutter(16), inf),
@@ -69,11 +69,11 @@ SynthDef(\guitare2, {
 //      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.529!3, 0.295, 0.529!3, 0.25].flat.stutter(16), inf),
           \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.564!3, 0.295, 0.529!3, 0.25].flat.stutter(16), inf),
           \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.294].flat.stutter(4), inf) + Pseq(Pseries(0, 0.00007, 16).asStream.nextN(16).mirror, inf),
-          \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.55].flat.stutter(4), inf) + Pseq(Pseries(0, 0.00017, 16).asStream.nextN(16).mirror.stutter(2), inf),
+          \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.55].flat.stutter(4), inf) + Pseq(Pseries(0, 0.00017, 16).asStream.nextN(16).reverse.mirror.stutter(2), inf),
     \rel, 0.1,
     \atk, 0.5,
     \rate, 4.midiratio,
-    \amp, 4,
+    \amp, 4 * 0.5,
     \pan, Pwhite(-0.5, 0.5, inf),
     \out, ~highPassBus
 ).play(t);
@@ -87,12 +87,12 @@ SynthDef(\guitare2, {
 //     0.345, 0.398, 0.48
 //      \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.529!3, 0.295, 0.529!3, 0.25].flat.stutter(16), inf),
           \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.564!3, 0.295, 0.529!3, 0.25].flat.stutter(16), inf),
-          \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.294].flat.stutter(4), inf) + Pseq(Pseries(0, 0.00007, 16).asStream.nextN(16).mirror, inf),
+          \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.294].flat.stutter(4), inf) + Pseq(Pseries(0, 0.00007, 16).asStream.nextN(16).reverse.mirror, inf),
 //           \spos, Pwhite(-0.0001, 0.0001, inf) + Pseq([0.55].flat.stutter(4), inf) + Pseq(Pseries(0, 0.00017, 16).asStream.nextN(16).mirror.stutter(2), inf),
     \rel, 0.1,
     \atk, 0.5,
     \rate, 4.midiratio,
-    \amp, 4,
+    \amp, 4 * 0.5,
     \pan, Pwhite(-0.5, 0.5, inf),
     \out, ~highPassBus
 ).play(t);

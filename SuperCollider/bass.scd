@@ -55,12 +55,12 @@ SynthDef.new(\ponddrop, {
     sig = (sig * loopEnv) * (1 + LFTri.ar([freq + 1.1, freq + 1] * 1.001 * triMod, mul: loopEnv * 1));
 //     sig = sig + (sig * LFTri.ar([freq + 0.1, freq + 0.2] * 1.01) * 0.25);
     linPass = XLine.kr(low, 6000, atk + rel * 0.5);
-    sig = LPF.ar(sig, linPass) * 1;
+    sig = LPF.ar(sig, linPass) * 4;
     sig = HPF.ar(sig, 50);
     sig = Balance2.ar(sig[panFlip[0]], sig[panFlip[1]], pan, 1);
     Out.ar(out, sig);
 }).add;
 )
 
-~pondCluster = {
-Synth.new(\ponddrop, [\freq, ~toFreq.(["F4", "F5"].choose) * [0, 2, 4, 5, 7, 9, 11, 12].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, 2 * 0.25, \triMod, 0.5, \dec, [0.075, 0.1, 0.05].choose, \low, rrand(200, 800)]);
+
+Synth.new(\ponddrop, [\freq, ~toFreq.(["F4", "F5"].choose) * 2 * [0, 2, 4, 5, 7, 9, 11, 12].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, 20 * 0.25, \triMod, 0.5, \dec, [0.075, 0.1, 0.05].choose, \low, rrand(200, 800)]);

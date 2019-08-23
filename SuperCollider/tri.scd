@@ -27,29 +27,24 @@ sig = sig * amp;
 )
 
 (
-var f = ~toFreq.("F3") * 12.midiratio;
-var amp = 1;
+var f = ~toFreq.("F3") * 0.midiratio;
+var amp = 0.5;
 var p = {rrand(-0.75, 0.75)}!6.();
 var fr = [-24, 0, 4, 7, 11, 16];
 {
     |i| 
     Synth.new(\tri, 
-        [\freq, f * fr[i].midiratio * 0.midiratio, 
+        [\freq, f * fr[i].midiratio * [0, 12].midiratio.choose, 
          \lfoFreq, rrand(10, 6), 
+         \lfo2Freq, rrand(10, 16), 
          \pan, p[i],
          \atk, 4,
+         \amp1, 8,
          \mod1, [2, 4].choose * 4,
          \mod2, [2, 4].choose * 4,
          \amp, 0.5 * amp
     ]);
 }!6.();
-// Synth.new(\tri, [\freq, f * 0.5 * -17.midiratio, \lfoFreq, rrand(0.1, 6), \pan, p[0], \amp, 0.85 * 1]);
-// Synth.new(\tri, [\freq, f * -1.midiratio * 1, \lfoFreq, rrand(0.1, 6), \pan, p[1], \amp, 0.5 * amp]);
-// Synth.new(\tri, [\freq, f * 2.midiratio * 1, \lfoFreq, rrand(0.1, 6), \pan, p[2], \amp, 0.5 * amp]);
-// Synth.new(\tri, [\freq, f * 7.midiratio * 1, \lfoFreq, rrand(0.1, 6), \pan, p[3], \amp, 0.5 * amp]);
-// Synth.new(\tri, [\freq, f * 9.midiratio * 1, \lfoFreq, rrand(6, 12), \pan, p[4], \amp, 0.5 * amp]);
-// Synth.new(\tri, [\freq, f * 14.midiratio * 1, \lfoFreq, rrand(6, 12), \pan, p[5], \amp, 0.5 * amp]);
 )
-// {rrand(-0.5, 0.5)}!5.();
 
-{|i| i.postln;}!5.();
+Synth.new(\ponddrop, [\freq, ~toFreq.(["F4", "F5"].choose) * 2 * [0, 2, 4, 5, 7, 9, 11, 12].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, 20 * 0.25, \triMod, 0.5, \dec, [0.075, 0.1, 0.05].choose, \low, rrand(200, 800)]);
