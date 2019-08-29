@@ -90,32 +90,32 @@ setDotsShaders = function() {
     // Enable the attribute
     gl.enableVertexAttribArray(coord);
 }
-setDotsShaders();
+// setDotsShaders();
 
 drawDots = function() {
     vertices = [];
     let xOffset = (noise(frameCount * 0.01) - 0.5) * 0.75;
     let yOffset = (noise((frameCount + 100) * 0.01) - 0.5) * 0.75;
-    let t = drawCount * 0.035 + 80;
+    let t = getT();
     let fx = 1;
     let fy = 1;
     let x = 1;
     let y = 1;
-    for (let i = 0; i < 30000; i += 1) {
-        x = sin(tan(i * 25 + t) + i * t * 0.000001) * i * 0.00005;
-        y = cos(tan(i * 25 + t) + i * t * 0.000001) * cos(t * 100 + i * 0.0002) * i * 0.00015;
+    for (let i = 0; i < posAmount; i += 1) {
+        x = sin(tan(i * posMod + t) + i * t * posSpeed) * i * 0.00005;
+        y = cos(tan(i * posMod + t) + i * t * posSpeed) * yMod(t, i) * i * 0.00015;
         //         x *= sin(t * 50 * cos(y * 0.002));
         //         x *= cos(fx * fy * 0.001) * sin(x + t * 20);
         //         y *= cos(fx * fy * 0.001) * cos(x + t * 20);
-        x += sin(fx * 0.12) * 5;
-        y += sin(fy * 0.12) * 5;
+        x += sin(fx * feedMod()) * feedAmp;
+        y += sin(fy * feedMod()) * feedAmp;
         fx = x;
         fy = y;
         //         x += (Math.random() - 0.5) * 0.00005;
         //         y += (Math.random() - 0.5) * 0.00005;
         x += xOffset * 0.125;
         y += yOffset * 0.125;
-        vertices.push(x * 1.5 * 0.235, y * 0.8 * 0.235 - 0.25, 0.0);
+        vertices.push(x * 1.5 * posScale + xAdd, y * 0.8 * posScale + yAdd, 0.0);
     }
     // Create an empty buffer object to store the vertex buffer
     // var vertex_buffer = gl.createBuffer();
@@ -140,8 +140,37 @@ drawDots = function() {
     // Clear the color buffer bit
     // gl.clear(gl.COLOR_BUFFER_BIT);
     // Draw the triangle
-    gl.drawArrays(gl.POINTS, 0, 30000);
+    gl.drawArrays(gl.POINTS, 0, posAmount);
 }
+
+
+getT = function() {
+    return drawCount * 0.035 + 80;
+}
+posAmount = 10000;
+posMod = 25;
+posSpeed = 0.000001;
+feedMod = function() {
+    return 0.12;
+};
+feedAmp = 5;
+yMod = function(time, index) {
+//     return 1;
+    return cos(time * 100 + index * 0.0002);
+}
+posScale = 0.235;
+xAdd = 0;
+yAdd = -0.25;
+
+
+drawIncrement *= 10;
+drawIncrement *= 0.1;
+drawIncrement *= 2;
+drawIncrement *= 0.5;
+logJavaScriptConsole(drawIncrement);
+
+
+
 
 
 drawCount = 0;
