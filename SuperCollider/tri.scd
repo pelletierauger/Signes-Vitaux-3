@@ -42,12 +42,12 @@ var fr = [-24, 0, 4, 7, 11, 16];
          \amp1, 8,
          \mod1, [2, 4].choose * 4,
          \mod2, [2, 4].choose * 4,
-         \amp, 1 * amp
+         \amp, 0.5 * amp
     ]);
 }!6.();
 )
 
-Synth.new(\ponddrop, [\freq, ~toFreq.(["F4", "F5"].choose) * 2 * [0, 2, 4, 5, 7, 9, 11, 12].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, 2 * 0.25, \triMod, 0.5, \dec, [0.075, 0.1, 0.05].choose, \low, rrand(200, 800)]);
+Synth.new(\ponddrop, [\freq, ~toFreq.(["F4", "F5"].choose) * 2 * [0, 2, 4, 5, 7, 9, 11, 12].choose.midiratio, \amp, 4.7 * 1, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, 20 * 0.25, \triMod, 0.5, \dec, [0.075, 0.1, 0.05].choose, \low, rrand(200, 800)]);
 
 
 
@@ -56,8 +56,8 @@ Synth.new(\ponddrop, [\freq, ~toFreq.(["F2"].choose) * 2 * 0.midiratio, \amp, 4.
 
 (
 var fr1 = [0!8, 2!4, 4!3, 2].flat.midiratio;
-var fr2 = [0!8, 2!4, -5!3, 2].flat.midiratio;
-var fr = fr1 ++ fr2;
+var fr2 = [0!8, 2!4, -5!4].flat.midiratio;
+var fr = fr2;
 ~oceanBlue.stop;
 ~oceanBlue = Pbind(
     \instrument, \ponddrop,
@@ -65,7 +65,7 @@ var fr = fr1 ++ fr2;
     \freq, ~toFreq.("F2") * 2 * Pseq(fr, inf),
     \atk, 0.15,
     \freqOsc, 20 * 0.25,
-    \triMod, Pseq([0.5, 0.5], inf),
+    \triMod, Pseq([0.5, 0.501], inf),
     \dec, 4,
     \amp, 7.7 * Pseq([1, 1.75], inf) * 0.5,
     \rel, 2,
@@ -78,18 +78,18 @@ var fr = fr1 ++ fr2;
 (
 ~friturePerc.stop;
 ~friturePerc = Pbind(
-    \instrument, \friture,
+    \instrument, \ponddrop,
     \dur, Pseq([0.5], inf),
-    \freq, Pseq([Rest(), 1], inf) * ~toFreq.("F5") * 0.5,
+    \freq, Pseq([Rest(), 1], inf) * ~toFreq.("F5") * 0.125,
     \amp, 0.75 * 16 * 2,
-    \rel, 0.125 * 5.95 * Pwhite(0.5, 2, inf),
-    \atk, 0.01,
+    \rel, 0.25,
+    \atk, 0.001,
     \lpff, 20000,
     \sustain, 0.001,
-    \fm1freq, 4.001 * 1.5,
+    \triMod, 3,
     \pan, Pwhite(-0.2, 0.2, inf),
-    \out, ~reverbBus
-).play(t, quant: [0.5, 0.125 * 1]);
+    \out, 0
+).play(t, quant: [0.5, 0.125 * 1.125]);
 )
 
 t.tempo_(58/60);
