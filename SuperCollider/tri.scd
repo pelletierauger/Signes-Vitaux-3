@@ -48,3 +48,26 @@ var fr = [-24, 0, 4, 7, 11, 16];
 )
 
 Synth.new(\ponddrop, [\freq, ~toFreq.(["F4", "F5"].choose) * 2 * [0, 2, 4, 5, 7, 9, 11, 12].choose.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 20, \pan, rrand(0.0, 2.0) - 1, \freqOsc, 20 * 0.25, \triMod, 0.5, \dec, [0.075, 0.1, 0.05].choose, \low, rrand(200, 800)]);
+
+
+
+Synth.new(\ponddrop, [\freq, ~toFreq.(["F2"].choose) * 2 * 0.midiratio, \amp, 4.7, \out, ~reverbBus, \rel, 2, \pan, rrand(0.0, 2.0) - 1, \freqOsc, 20 * 0.25, \triMod, 1.5, \dec, 1, \low, rrand(200, 800)]);
+
+
+(
+var fr = [0!8, 2!4, 4!3, 2].flat.midiratio;
+~oceanBlue.stop;
+~oceanBlue = Pbind(
+    \instrument, \ponddrop,
+    \dur, Pseq([0.5], inf),
+    \freq, ~toFreq.("F2") * 1 * Pseq(fr, inf),
+    \atk, 0.15,
+    \freqOsc, 20 * 0.25,
+    \triMod, Pseq([2, 1.5], inf),
+    \dec, 1,
+    \amp, 4.7 * Pseq([1, 0.75], inf),
+    \rel, 2,
+    \pan, Pwhite(-0.5, 0.5, inf),
+    \out, ~reverbBus
+).play(t);
+)
